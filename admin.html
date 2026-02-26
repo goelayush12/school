@@ -12,7 +12,6 @@
             font-family: 'Poppins', Arial, sans-serif;
         }
         
-        /* Login Form Styles */
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -54,7 +53,6 @@
             display: none;
         }
         
-        /* Admin Content - Hidden by default */
         #adminContent {
             display: none;
         }
@@ -71,6 +69,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .admin-header h1 {
             margin: 0;
@@ -95,6 +95,14 @@
         .btn-logout {
             background: #6b7280;
             color: white;
+        }
+        .btn-home {
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
         }
         .enquiry-card {
             background: white;
@@ -161,18 +169,14 @@
             padding: 40px;
             color: #6b7280;
         }
-        .logout-link {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: #6b7280;
-            border-radius: 5px;
-            margin-left: 10px;
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
-    <!-- Login Form -->
     <div class="login-container" id="loginForm">
         <h1>Admin Login</h1>
         <p class="error-message" id="errorMessage">Incorrect password. Please try again.</p>
@@ -182,15 +186,15 @@
         </form>
     </div>
 
-    <!-- Admin Content -->
     <div id="adminContent">
         <div class="admin-container">
             <div class="admin-header">
                 <h1>Admission Enquiries</h1>
-                <div>
+                <div class="header-buttons">
                     <button class="btn btn-refresh" onclick="loadEnquiries()">Refresh</button>
                     <button class="btn btn-clear" onclick="clearAllEnquiries()">Clear All</button>
-                    <a href="index.html" class="logout-link">Back to Website</a>
+                    <button class="btn btn-logout" onclick="logout()">Logout</button>
+                    <a href="index.html" class="btn btn-home">Back to Website</a>
                 </div>
             </div>
             <div id="enquiriesList"></div>
@@ -198,18 +202,23 @@
     </div>
 
     <script>
-        // Password check
-        // CHANGE THIS PASSWORD TO YOUR DESIRED PASSWORD
         const ADMIN_PASSWORD = "kalmanehru.22";
         
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-            loadEnquiries();
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+        
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            console.log('Login status:', isLoggedIn);
+            
+            if (isLoggedIn === 'true') {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                loadEnquiries();
+            }
         }
         
-        // Handle login
         document.getElementById('loginFormSubmit').addEventListener('submit', function(e) {
             e.preventDefault();
             const password = document.getElementById('adminPassword').value;
@@ -225,7 +234,14 @@
             }
         });
         
-        // Load enquiries from localStorage
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
         function loadEnquiries() {
             const enquiries = JSON.parse(localStorage.getItem('admissionEnquiries')) || [];
             const container = document.getElementById('enquiriesList');
@@ -235,7 +251,6 @@
                 return;
             }
             
-            // Sort by newest first
             enquiries.sort((a, b) => b.id - a.id);
             
             container.innerHTML = enquiries.map(enquiry => `
@@ -279,7 +294,6 @@
             `).join('');
         }
         
-        // Delete single enquiry
         function deleteEnquiry(id) {
             if (confirm('Are you sure you want to delete this enquiry?')) {
                 let enquiries = JSON.parse(localStorage.getItem('admissionEnquiries')) || [];
@@ -289,7 +303,6 @@
             }
         }
         
-        // Clear all enquiries
         function clearAllEnquiries() {
             if (confirm('Are you sure you want to delete ALL enquiries? This cannot be undone.')) {
                 localStorage.removeItem('admissionEnquiries');
