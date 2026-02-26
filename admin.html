@@ -312,13 +312,17 @@
 
     <script>
         const ADMIN_PASSWORD = "kalmanehru.22";
+        const STORAGE_KEY = 'knps_admin_session';
         
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
         });
         
         function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            let isLoggedIn = sessionStorage.getItem(STORAGE_KEY);
+            if (!isLoggedIn) {
+                isLoggedIn = localStorage.getItem(STORAGE_KEY);
+            }
             console.log('Login status:', isLoggedIn);
             
             if (isLoggedIn === 'true') {
@@ -333,7 +337,8 @@
             const password = document.getElementById('adminPassword').value;
             
             if (password === ADMIN_PASSWORD) {
-                localStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+                localStorage.setItem(STORAGE_KEY, 'true');
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
                 loadEnquiries();
@@ -344,7 +349,8 @@
         });
         
         function logout() {
-            localStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(STORAGE_KEY);
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('adminPassword').value = '';
