@@ -11,6 +11,53 @@
             padding: 20px;
             font-family: 'Poppins', Arial, sans-serif;
         }
+        
+        /* Login Form Styles */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .login-container h1 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .login-container button:hover {
+            background: #3b82f6;
+        }
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        /* Admin Content - Hidden by default */
+        #adminContent {
+            display: none;
+        }
         .admin-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -43,6 +90,10 @@
         }
         .btn-clear {
             background: #ef4444;
+            color: white;
+        }
+        .btn-logout {
+            background: #6b7280;
             color: white;
         }
         .enquiry-card {
@@ -84,89 +135,103 @@
             margin-bottom: 4px;
         }
         .detail-value {
-            font-weight: 500;
+            font-size: 15px;
             color: #1f2937;
+            font-weight: 500;
         }
         .enquiry-message {
             margin-top: 15px;
-            padding: 15px;
-            background: #f9fafb;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
             border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
         }
-        .status-new {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-contacted {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        .delete-btn:hover {
+            background: #dc2626;
         }
         .no-enquiries {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px;
             color: #6b7280;
         }
-        .no-enquiries i {
-            font-size: 60px;
-            margin-bottom: 20px;
-            color: #d1d5db;
-        }
-        .total-count {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+        .logout-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #6b7280;
+            border-radius: 5px;
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <div>
+    <!-- Login Form -->
+    <div class="login-container" id="loginForm">
+        <h1>Admin Login</h1>
+        <p class="error-message" id="errorMessage">Incorrect password. Please try again.</p>
+        <form id="loginFormSubmit">
+            <input type="password" id="adminPassword" placeholder="Enter Admin Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- Admin Content -->
+    <div id="adminContent">
+        <div class="admin-container">
+            <div class="admin-header">
                 <h1>Admission Enquiries</h1>
-                <p style="margin: 5px 0 0 0; opacity: 0.8;">Kamla Nehru Public School - Admin Panel</p>
+                <div>
+                    <button class="btn btn-refresh" onclick="loadEnquiries()">Refresh</button>
+                    <button class="btn btn-clear" onclick="clearAllEnquiries()">Clear All</button>
+                    <a href="index.html" class="logout-link">Back to Website</a>
+                </div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <span class="total-count" id="totalCount">0 Enquiries</span>
-                <button class="btn btn-refresh" onclick="loadEnquiries()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-                <button class="btn btn-clear" onclick="clearAllEnquiries()">
-                    <i class="fas fa-trash"></i> Clear All
-                </button>
-            </div>
-        </div>
-        
-        <div id="enquiriesList">
-            <!-- Enquiries will be loaded here -->
+            <div id="enquiriesList"></div>
         </div>
     </div>
 
     <script>
+        // Password check
+        // CHANGE THIS PASSWORD TO YOUR DESIRED PASSWORD
+        const ADMIN_PASSWORD = "knps2025";
+        
+        // Check if already logged in
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            loadEnquiries();
+        }
+        
+        // Handle login
+        document.getElementById('loginFormSubmit').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                loadEnquiries();
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+            }
+        });
+        
         // Load enquiries from localStorage
         function loadEnquiries() {
             const enquiries = JSON.parse(localStorage.getItem('admissionEnquiries')) || [];
             const container = document.getElementById('enquiriesList');
-            const countEl = document.getElementById('totalCount');
-            
-            countEl.textContent = `${enquiries.length} Enquiry${enquiries.length !== 1 ? 'ies' : ''}`;
             
             if (enquiries.length === 0) {
-                container.innerHTML = `
-                    <div class="no-enquiries">
-                        <i class="fas fa-inbox"></i>
-                        <h2>No Enquiries Yet</h2>
-                        <p>Admission enquiries will appear here when someone submits the form.</p>
-                    </div>
-                `;
+                container.innerHTML = '<div class="no-enquiries"><p>No admission enquiries yet.</p></div>';
                 return;
             }
             
@@ -176,16 +241,8 @@
             container.innerHTML = enquiries.map(enquiry => `
                 <div class="enquiry-card">
                     <div class="enquiry-header">
-                        <div>
-                            <span class="enquiry-id">#${enquiry.id}</span>
-                            <span class="status-new">${enquiry.status || 'New'}</span>
-                        </div>
-                        <div>
-                            <span class="enquiry-date">${enquiry.date} at ${enquiry.time}</span>
-                            <button onclick="deleteEnquiry(${enquiry.id})" style="margin-left: 10px; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+                        <span class="enquiry-id">#${enquiry.id}</span>
+                        <span class="enquiry-date">${enquiry.date} ${enquiry.time}</span>
                     </div>
                     <div class="enquiry-details">
                         <div class="detail-item">
@@ -215,6 +272,9 @@
                             <p style="margin: 5px 0 0 0;">${enquiry.message}</p>
                         </div>
                     ` : ''}
+                    <div style="margin-top: 15px;">
+                        <button class="delete-btn" onclick="deleteEnquiry(${enquiry.id})">Delete</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -236,9 +296,6 @@
                 loadEnquiries();
             }
         }
-        
-        // Load on page open
-        loadEnquiries();
     </script>
 </body>
 </html>
