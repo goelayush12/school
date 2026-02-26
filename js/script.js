@@ -144,6 +144,24 @@ document.addEventListener('DOMContentLoaded', function() {
             // Save to localStorage
             localStorage.setItem('admissionEnquiries', JSON.stringify(enquiries));
             
+            // Send email notification via EmailJS
+            const emailParams = {
+                to_email: "goelayush12359@gmail.com",
+                from_name: name,
+                from_email: email,
+                phone: phone,
+                class: classSelected,
+                message: message,
+                school_name: "Kamla Nehru Public School"
+            };
+
+            emailjs.send("service_school_enquiry", "template_admission", emailParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response.status, response.text);
+                }, function(error) {
+                    console.log('Email failed to send:', error);
+                });
+            
             // Show success message
             alert('Thank you for your enquiry! We will contact you soon.');
             
