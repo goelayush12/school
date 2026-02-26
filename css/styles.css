@@ -674,17 +674,59 @@ body {
     .about-image {
         order: -1;
     }
+    
+    .hero-content {
+        padding: 30px 40px;
+    }
 }
 
 @media (max-width: 768px) {
+    .site-header {
+        position: relative;
+    }
+    
+    .header-container {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .logo-section {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .logo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .school-title h1 {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .tagline {
+        font-size: 0.7rem;
+    }
+    
     .mobile-menu-btn {
         display: block;
+        padding: 8px 12px;
+        font-size: 1rem;
     }
     
     .main-nav {
         display: none;
         width: 100%;
-        padding-top: 20px;
+        padding-top: 15px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     
     .main-nav.active {
@@ -694,6 +736,7 @@ body {
     .main-nav ul {
         flex-direction: column;
         gap: 0;
+        padding: 0;
     }
     
     .main-nav li {
@@ -702,96 +745,276 @@ body {
     
     .main-nav a {
         display: block;
-        padding: 15px 0;
-    }
-    
-    .header-container {
-        padding: 12px 15px;
-    }
-    
-    .school-title h1 {
-        font-size: 1.1rem;
-    }
-    
-    .hero-section {
-        padding: 100px 15px 60px;
-        min-height: auto;
-    }
-    
-    .hero-content h2 {
-        font-size: 1.8rem;
-    }
-    
-    .hero-content p {
+        padding: 12px 20px;
         font-size: 1rem;
     }
     
+    .hero-section {
+        padding: 80px 15px 50px;
+        min-height: 60vh;
+        margin-top: 0;
+    }
+    
+    .hero-content {
+        padding: 25px 20px;
+        margin: 0 10px;
+    }
+    
+    .hero-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .hero-content p {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+    
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
     .section-header h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+    }
+    
+    .about-section,
+    .facilities-section,
+    .gallery-section,
+    .contact-section {
+        padding: 60px 0;
+    }
+    
+    .about-content {
+        gap: 30px;
+    }
+    
+    .about-text p {
+        font-size: 0.95rem;
     }
     
     .about-stats {
-        justify-content: center;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .stat-item {
+        flex: 1;
+        min-width: 80px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .about-image img {
+        max-height: 250px;
     }
     
     .facilities-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .facility-card {
+        padding: 25px 20px;
+    }
+    
+    .facility-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .facility-icon i {
+        font-size: 24px;
+    }
+    
+    .facility-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .facility-card p {
+        font-size: 0.85rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .gallery-item {
+        height: 150px;
+    }
+    
+    .contact-content {
+        gap: 30px;
+    }
+    
+    .contact-info {
+        gap: 20px;
+    }
+    
+    .contact-item {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .contact-icon {
+        width: 45px;
+        height: 45px;
+        flex-shrink: 0;
+    }
+    
+    .contact-icon i {
+        font-size: 1.1rem;
+    }
+    
+    .contact-details h3 {
+        font-size: 1rem;
+    }
+    
+    .contact-details p {
+        font-size: 0.85rem;
+    }
+    
+    .social-links {
+        justify-content: flex-start;
+    }
+    
+    .contact-form {
+        padding: 20px;
+    }
+    
+    .contact-form h3 {
+        font-size: 1.3rem;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+    }
+    
+    .contact-form .btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    .admission-btn {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+        padding: 12px 15px;
+        font-size: 0.85rem;
+        justify-content: center;
+        border-radius: 25px;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-school h3 {
+        font-size: 1.1rem;
+    }
+    
+    .footer-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 380px) {
+    .logo {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .school-title h1 {
+        font-size: 0.9rem;
+    }
+    
+    .tagline {
+        display: none;
+    }
+    
+    .hero-content h2 {
+        font-size: 1.3rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.4rem;
     }
     
     .gallery-grid {
         grid-template-columns: 1fr;
     }
     
-    .admission-btn {
-        bottom: 20px;
-        right: 20px;
-        padding: 12px 20px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .logo img {
-        font-size: 22px;
-    }
-    
-    .school-title h1 {
-        font-size: 1rem;
-    }
-    
-    .tagline {
-        font-size: 0.75rem;
-    }
-    
-    .hero-content h2 {
-        font-size: 1.5rem;
+    .gallery-item {
+        height: 200px;
     }
     
     .about-stats {
         flex-direction: column;
-        gap: 20px;
+        align-items: center;
     }
     
-    .stat-number {
-        font-size: 1.6rem;
-    }
-    
-    .contact-form {
-        padding: 25px;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-    }
-    
-    .btn {
+    .stat-item {
         width: 100%;
         text-align: center;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .facility-card,
+    .gallery-item,
+    .social-icon,
+    .footer-links a,
+    .main-nav a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .admission-btn {
+        min-height: 48px;
+    }
+    
+    input, 
+    select, 
+    textarea,
+    button {
+        min-height: 44px;
     }
 }
 
