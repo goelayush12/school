@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Admission Enquiries | Kamla Nehru Public School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: #f3f4f6;
+            padding: 20px;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-refresh {
+            background: #10b981;
+            color: white;
+        }
+        .btn-clear {
+            background: #ef4444;
+            color: white;
+        }
+        .enquiry-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .enquiry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .enquiry-id {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        .enquiry-date {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .enquiry-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .detail-value {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .enquiry-message {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 5px;
+        }
+        .status-new {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-contacted {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .no-enquiries {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+        .no-enquiries i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #d1d5db;
+        }
+        .total-count {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>Admission Enquiries</h1>
+                <p style="margin: 5px 0 0 0; opacity: 0.8;">Kamla Nehru Public School - Admin Panel</p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="total-count" id="totalCount">0 Enquiries</span>
+                <button class="btn btn-refresh" onclick="loadEnquiries()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn btn-clear" onclick="clearAllEnquiries()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+        
+        <div id="enquiriesList">
+            <!-- Enquiries will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Load enquiries from localStorage
+        function loadEnquiries() {
+            const enquiries = JSON.parse(localStorage.getItem('admissionEnquiries')) || [];
+            const container = document.getElementById('enquiriesList');
+            const countEl = document.getElementById('totalCount');
+            
+            countEl.textContent = `${enquiries.length} Enquiry${enquiries.length !== 1 ? 'ies' : ''}`;
+            
+            if (enquiries.length === 0) {
+                container.innerHTML = `
+                    <div class="no-enquiries">
+                        <i class="fas fa-inbox"></i>
+                        <h2>No Enquiries Yet</h2>
+                        <p>Admission enquiries will appear here when someone submits the form.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by newest first
+            enquiries.sort((a, b) => b.id - a.id);
+            
+            container.innerHTML = enquiries.map(enquiry => `
+                <div class="enquiry-card">
+                    <div class="enquiry-header">
+                        <div>
+                            <span class="enquiry-id">#${enquiry.id}</span>
+                            <span class="status-new">${enquiry.status || 'New'}</span>
+                        </div>
+                        <div>
+                            <span class="enquiry-date">${enquiry.date} at ${enquiry.time}</span>
+                            <button onclick="deleteEnquiry(${enquiry.id})" style="margin-left: 10px; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="enquiry-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Parent Name</span>
+                            <span class="detail-value">${enquiry.name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">
+                                <a href="tel:${enquiry.phone}" style="color: #3b82f6; text-decoration: none;">${enquiry.phone}</a>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">
+                                <a href="mailto:${enquiry.email}" style="color: #3b82f6; text-decoration: none;">${enquiry.email}</a>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Class</span>
+                            <span class="detail-value">${enquiry.class}</span>
+                        </div>
+                    </div>
+                    ${enquiry.message ? `
+                        <div class="enquiry-message">
+                            <span class="detail-label">Message</span>
+                            <p style="margin: 5px 0 0 0;">${enquiry.message}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        // Delete single enquiry
+        function deleteEnquiry(id) {
+            if (confirm('Are you sure you want to delete this enquiry?')) {
+                let enquiries = JSON.parse(localStorage.getItem('admissionEnquiries')) || [];
+                enquiries = enquiries.filter(e => e.id !== id);
+                localStorage.setItem('admissionEnquiries', JSON.stringify(enquiries));
+                loadEnquiries();
+            }
+        }
+        
+        // Clear all enquiries
+        function clearAllEnquiries() {
+            if (confirm('Are you sure you want to delete ALL enquiries? This cannot be undone.')) {
+                localStorage.removeItem('admissionEnquiries');
+                loadEnquiries();
+            }
+        }
+        
+        // Load on page open
+        loadEnquiries();
+    </script>
+</body>
+</html>
