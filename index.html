@@ -219,6 +219,12 @@
                 <div class="contact-form">
                     <h3>Admission Enquiry</h3>
                     <form id="admissionForm">
+                        <!-- Spam Protection: Honeypot field (hidden from humans) -->
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        
                         <div class="form-group">
                             <input type="text" id="name" name="name" placeholder="Parent's Name" required>
                         </div>

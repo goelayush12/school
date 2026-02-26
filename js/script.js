@@ -77,12 +77,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Admission Form Handling
+    // Admission Form Handling with Spam Protection
     const admissionForm = document.getElementById('admissionForm');
     
     if (admissionForm) {
         admissionForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Spam Protection: Check honeypot field (hidden field that bots fill but humans don't see)
+            const honeypotField = document.getElementById('website');
+            if (honeypotField && honeypotField.value) {
+                // Bot detected! Silently reject the submission
+                console.log('Spam bot detected and blocked');
+                return;
+            }
             
             // Get form values
             const name = document.getElementById('name').value;
@@ -94,6 +102,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // Simple validation
             if (!name || !phone || !email || !classSelected) {
                 alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Additional validation: Check for suspicious patterns
+            const suspiciousPatterns = ['http://', 'https://', 'www.', '.com', '.net', '.org', 'spam', 'buy now', 'click here'];
+            const lowerMessage = message.toLowerCase();
+            for (let pattern of suspiciousPatterns) {
+                if (lowerMessage.includes(pattern)) {
+                    alert('Please enter a valid message without URLs or promotional content.');
+                    return;
+                }
+            }
+            
+            // Validate phone number (basic check)
+            const phoneRegex = /^[0-9+\-\s()]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid phone number.');
                 return;
             }
             
